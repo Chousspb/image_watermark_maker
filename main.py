@@ -1,6 +1,9 @@
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 import os
 from dotenv import load_dotenv
+import time
+
+start = time.time()
 
 load_dotenv()
 
@@ -19,7 +22,6 @@ for filename in os.listdir(source_directory_path):
 
         text_box = draw.textbbox((0, 0), watermark_text, font=font)
 
-
         x_reps = int(image.width / (text_box[2] * 2)) + 1
         y_reps = int(image.height / (text_box[3] * 2)) + 1
 
@@ -33,9 +35,11 @@ for filename in os.listdir(source_directory_path):
 
         watermark = watermark.resize(image.size)
         watermark = watermark.convert(image.mode)
-        image = Image.blend(image, watermark, alpha=0.035)
+        image = Image.blend(image, watermark, alpha=0.039)
         if "exif" in image.info:
             image = ImageOps.exif_transpose(image)
 
         image.save(os.path.join(destination_directory_path, filename))
 
+end = time.time() - start
+print(f"Выполнено за: {end:.3f} секунд")
